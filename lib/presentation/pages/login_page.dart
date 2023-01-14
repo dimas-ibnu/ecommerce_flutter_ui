@@ -11,6 +11,14 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+  bool isShowPassword = false;
+
+  @override
+  void initState() {
+    isShowPassword = false;
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -70,6 +78,11 @@ class _LoginPageState extends State<LoginPage> {
             title: "Password",
             icon: IconlyLight.lock,
             isPassword: true,
+            showPassword: () {
+              setState(() {
+                isShowPassword = !isShowPassword;
+              });
+            },
             keyboardType: TextInputType.visiblePassword,
           ),
           const SizedBox(height: 20),
@@ -89,6 +102,7 @@ class _LoginPageState extends State<LoginPage> {
       {required String title,
       required IconData icon,
       bool isPassword = false,
+      Function()? showPassword,
       TextInputType keyboardType = TextInputType.text}) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 10),
@@ -103,8 +117,15 @@ class _LoginPageState extends State<LoginPage> {
             ),
             child: TextField(
               keyboardType: keyboardType,
-              obscureText: isPassword,
+              obscureText: isPassword && !isShowPassword,
               decoration: InputDecoration(
+                suffix: isPassword
+                    ? IconButton(
+                        onPressed: showPassword,
+                        icon: !isShowPassword
+                            ? Icon(IconlyLight.show)
+                            : Icon(IconlyLight.hide))
+                    : null,
                 hintText: title,
                 hintStyle: TextStyle(color: AppColor.grey),
               ),
@@ -116,12 +137,14 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   _createAccountButton() {
-    return TextButton(
-        onPressed: () {},
-        child: Text(
-          "Create Account",
-          style:
-              TextStyle(color: AppColor.primary1, fontWeight: FontWeight.w300),
-        ));
+    return Center(
+      child: TextButton(
+          onPressed: () {},
+          child: Text(
+            "Create Account",
+            style: TextStyle(
+                color: AppColor.primary1, fontWeight: FontWeight.w300),
+          )),
+    );
   }
 }
